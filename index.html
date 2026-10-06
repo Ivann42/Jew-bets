@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Royal Poker</title>
+<style>
+:root{--bg:#070707;--pn:#15100f;--tx:#f1ece4;--mu:#a89f94;--gd:#f5c542;--rd:#c0262d;--bd:#4a2226;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;background:radial-gradient(circle at 50% 0,#3a0c10,var(--bg) 70%);color:var(--tx);font:14px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100%}
+[hidden]{display:none!important}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 16px;background:var(--pn);border-bottom:2px solid var(--rd)}
+h1{margin:0;font:700 20px Georgia,serif;color:var(--gd)}#hd{color:var(--mu);font-size:12px}
+button{background:#2a1a1a;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px 14px;font:600 14px inherit;cursor:pointer}button:hover{border-color:var(--gd)}
+button.gd,#bR{background:var(--gd);color:#111;border-color:var(--gd)}#bF{background:#a3202b;border-color:#e0434f}#bC{background:#1e8a4c;border-color:#2bb36a}#amt{width:90px;padding:8px;border-radius:8px;border:2px solid var(--gd);background:#000;color:var(--gd);font-weight:700;font-size:15px}
+main{display:grid;grid-template-columns:1fr 290px;gap:14px;padding:12px;max-width:1300px;margin:auto}
+#felt{position:relative;width:min(100%,820px);height:clamp(280px,50vh,430px);margin:100px auto 105px}
+#tbl{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse,#23975a,#0b4a27 72%);border:14px solid #0c0c0c;box-shadow:0 0 0 3px var(--rd),0 0 0 6px #000,inset 0 0 0 3px var(--gd),inset 0 0 70px #000b,0 12px 40px #000a}#tbl::after{content:"♠ ROYAL CASINO ♥";position:absolute;left:0;right:0;top:78%;text-align:center;color:#ffffff26;letter-spacing:5px;font:700 18px Georgia,serif}
+#ctr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+#pt{display:flex;align-items:flex-end;justify-content:center;gap:8px;min-height:30px;background:#000a;color:var(--gd);border:1px solid var(--rd);border-radius:20px;padding:4px 14px;font-weight:700;margin-bottom:8px}
+#bdr{display:flex;gap:6px;justify-content:center}#seats{position:absolute;inset:0}
+.card{width:34px;height:48px;border-radius:5px;background:#fff;color:#111;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font:700 15px/1 Georgia,serif;box-shadow:0 2px 6px #0008;margin:0 1px}
+.card i{font-style:normal;font-size:17px}.card.red{color:#d11a2a}
+.card.back{background:repeating-linear-gradient(45deg,transparent 0 5px,#0007 5px 6px),repeating-linear-gradient(-45deg,transparent 0 5px,#0007 5px 6px),#b01822;border:3px solid #fff;box-sizing:border-box;box-shadow:inset 0 0 0 2px #7a0f17,0 2px 6px #0008;color:#fff}.card.back::after{content:"♠";font-size:1.5em;text-shadow:0 0 3px #000}
+.card.big{width:48px;height:68px;font-size:20px}.card.big i{font-size:24px}.card.sm{width:26px;height:37px;font-size:12px}.card.sm i{font-size:13px}
+.card.empty{background:#0003;border:2px dashed #fff3;box-shadow:none}
+.deal{animation:dl .45s backwards}@keyframes dl{from{transform:translateY(-30px) scale(.6);opacity:0}}
+.lobby{position:fixed;inset:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:28px 12px;text-align:center;background:radial-gradient(circle at 50% 25%,#4a0d12,#050505 72%);z-index:60}
+.lobby::before{content:"";position:fixed;inset:10px;border:7px dotted var(--gd);border-radius:20px;animation:bl 1s steps(1) infinite;pointer-events:none}@keyframes bl{50%{border-color:var(--rd)}}
+.neon{font:900 clamp(34px,8vw,64px) Georgia,serif;color:#fff;letter-spacing:6px;text-shadow:0 0 8px #fff,0 0 22px var(--rd),0 0 44px var(--rd);animation:fk 4s infinite}@keyframes fk{93%{opacity:1}94%{opacity:.55}96%{opacity:1}}
+.suits{font-size:28px;letter-spacing:10px;color:#fff}.suits i{font-style:normal;color:#e0434f}.sub{margin:0 0 8px;color:var(--gd);letter-spacing:2px}
+.fan{display:flex;justify-content:center;margin-bottom:10px}.fan span{display:inline-block;margin:0 -8px;transform-origin:50% 100%}
+.panel{background:#000b;border:2px solid var(--rd);border-radius:14px;padding:16px 18px;width:min(92%,420px);box-shadow:0 0 30px #c0262d66}.panel label{display:block;text-align:left;margin:8px 0;color:var(--mu)}
+.panel select,.panel input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:9px;background:#000;color:var(--tx);border:1px solid var(--rd);border-radius:8px}.cta{width:100%;margin:8px 0;padding:12px;font-size:17px}
+.over .neon{color:#ff4b57;text-shadow:0 0 10px #ff2a38,0 0 40px #c0262d;animation:none}.over .panel p{margin:8px 0}.over b{color:var(--gd)}
+.pk{display:inline-block;cursor:pointer;transition:transform .15s}.pk.on{transform:translateY(-14px);filter:brightness(.65)}
+#dr{width:min(100%,820px);margin:0 auto 10px;color:var(--gd);font-weight:700}
+#lgd{border-top:1px solid var(--rd);margin-top:8px;padding-top:6px;font-size:12px}#lgd summary{cursor:pointer;color:var(--gd);font-weight:700}
+.lgb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.cd{display:flex;align-items:center;gap:6px;margin:2px 0}.cd b{width:16px;height:16px;border-radius:50%;border:2px dashed #fff;box-sizing:border-box}#lgd ol{margin:0;padding-left:18px}
+.stk{display:inline-flex;flex-direction:column-reverse;margin:0 1px}.stk i{width:22px;height:8px;border-radius:50%;background:var(--c);border:1px dashed #fffd;box-sizing:border-box;margin-top:-4px;box-shadow:0 1px 1px #000c}
+.ms{display:inline-flex;align-items:flex-end;margin-left:2px}.ms .stk i{width:14px;height:5px;margin-top:-2px}
+#stt{width:min(100%,820px);margin:-28px auto 10px;text-align:center;color:var(--gd);font-weight:700;letter-spacing:1px}
+.seat{position:absolute;transform:translate(-50%,-50%);width:130px;text-align:center;transition:opacity .3s}
+.pl{display:flex;align-items:center;gap:6px;background:#0b0f14ee;border:2px solid var(--bd);border-radius:30px;padding:4px 12px 4px 6px;margin:4px auto 0;width:max-content;position:relative;text-align:left}
+.pl b{display:block;font-size:13px}.pl small{color:var(--gd)}.av{font-size:26px}
+.turn .pl{border-color:var(--gd);box-shadow:0 0 16px var(--gd)}.fold{opacity:.4}.win .pl{border-color:#7ee0a0;box-shadow:0 0 16px #7ee0a0}
+.dl{position:absolute;right:-8px;top:-8px;background:#fff;color:#000;border-radius:50%;width:20px;height:20px;font:700 11px/20px sans-serif;font-style:normal}
+.bt{margin-top:3px;display:inline-flex;align-items:flex-end;gap:5px;background:#000a;border-radius:12px;padding:2px 8px;color:var(--gd);font:700 12px sans-serif}
+.bub{--bc:#fff;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:8px;white-space:nowrap;padding:5px 12px;border-radius:12px;font:800 13px sans-serif;color:#111;background:var(--bc);border:2px solid #000;z-index:5;box-shadow:0 2px 8px #000a}
+.bub::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:#000}
+.bub.pop{animation:pp .35s}@keyframes pp{from{transform:translateX(-50%) scale(.4);opacity:0}}
+.bub.bf{--bc:#b3202f;color:#fff}.bub.bc{--bc:#e8e8e8;color:#111}.bub.br{--bc:#f5c542;color:#111}
+#act{width:min(100%,820px);margin:0 auto;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;margin:4px 0}.row input{flex:1;min-width:120px;accent-color:var(--gd)}
+aside{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:10px;max-height:calc(100vh - 90px);display:flex;flex-direction:column}
+aside h3{margin:0 0 8px;font-size:14px;color:var(--gd)}#lg{overflow:auto;flex:1;font-size:13px}#lg div{padding:3px 0}
+.hd{color:var(--gd);font-weight:700;margin-top:8px;border-top:1px solid var(--bd);padding-top:6px}.f{color:#ff8a8a}.r{color:#ffd166}.c{color:#9ecbff}.win{color:#7ee0a0;font-weight:700}.sys{color:var(--mu)}.rd{color:#ff6b6b}
+#md{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:50}
+.box{position:relative;background:var(--pn);border:1px solid var(--gd);border-radius:16px;padding:24px;width:min(92%,380px);text-align:center}.box h2{margin-top:0;color:var(--gd)}
+.box label{display:block;text-align:left;margin:10px 0;color:var(--mu)}.box select{display:block;width:100%;margin-top:4px;padding:8px;background:#0d1117;color:var(--tx);border:1px solid var(--bd);border-radius:8px}
+.x{position:absolute;top:8px;right:8px;padding:2px 8px}.bigp{font:700 54px Georgia,serif;color:var(--gd)}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.g div{background:#0d1117;border-radius:8px;padding:8px;font-size:11px;color:var(--mu)}.g b{display:block;font-size:20px;color:var(--tx)}
+@media(max-width:900px){main{grid-template-columns:1fr}aside{max-height:240px}.seat{width:100px}.card.big{width:38px;height:54px}.pl b{font-size:11px}.av{font-size:20px}}
+</style></head><body>
+<header><h1>♠ Royal Poker <span style="color:var(--rd)">♥</span></h1><span id="hd"></span><div><button onclick="stats()">📊 Perfil</button> <button class="gd" onclick="menu()">♠ Nueva partida</button></div></header>
+<main><section><div id="felt"><div id="tbl"></div><div id="ctr"><div id="pt"></div><div id="bdr"></div></div><div id="seats"></div></div>
+<div id="stt"></div><div id="dr" class="row" hidden><span>Toca las cartas que quieras descartar →</span><button class="gd" id="bD">Quedarme</button></div><div id="act" hidden><div class="row"><button id="bF">Paso (retirarme)</button><button id="bC">Mesa</button><button id="bR">Subir</button></div>
+<div class="row" id="rs"><input type="range" id="sl"><input type="number" id="amt" inputmode="numeric" aria-label="Cantidad exacta"><button data-q="0">Mín</button><button data-q=".5">½ bote</button><button data-q="1">Bote</button><button data-q="-1">All-in</button></div></div></section>
+<aside><h3>📜 Registro de jugadas</h3><div id="lg"></div><details id="lgd" open></details></aside></main><div id="md" hidden></div>
+<script>
+const g=id=>document.getElementById(id),$=s=>document.querySelector(s);
+const SU='♠♥♦♣',RK=r=>({11:'J',12:'Q',13:'K',14:'A'}[r]||r),HN=['Carta alta','Pareja','Doble pareja','Trío','Escalera','Color','Full','Póker','Escalera de color'];
+const MD={hold:{n:'Texas Hold’em',h:2,o:0},omaha:{n:'Omaha',h:4,o:1},bigo:{n:'Omaha 5 cartas (Big O)',h:5,o:1},court:{n:'Courchevel',h:5,o:1,pf:1},short:{n:'Short Deck (6+)',h:2,o:0,sd:1},draw:{n:'Five Card Draw',h:5,o:0,dr:1}},DFC=[{nz:.4,bl:.05,ft:.4},{nz:.2,bl:.12,ft:.62},{nz:.08,bl:.18,ft:.8}],HS=['Carta alta','Pareja','Doble pareja','Escalera','Trío','Full','Color','Póker','Escalera de color'];
+const NAMES=[['Tú','🧑'],['Lucía','👩‍🦰'],['Marco','🧔'],['Akira','🥷'],['Sofía','👩‍💼'],['Viktor','🕵️']],COL=['#f5c542','#ff8fab','#7ee0a0','#7cc4ff','#c3a6ff','#ffb170'];
+const PR=[0,{t:.5,a:.4},{t:.3,a:.8},{t:.7,a:.5},{t:.4,a:.6},{t:.6,a:.9}],POS=[[50,100],[8,76],[8,22],[50,0],[92,22],[92,76]];
+const LV=[[10,20],[15,30],[25,50],[50,100],[100,200],[150,300],[250,500],[400,800]];
+let LAST,MO={n:'Texas Hold’em',h:2,o:0},D,DFN=1,DRW=0,SEL=new Set,GID=0,P=[],board=[],deck=[],cur=0,minR=0,dealer=-1,street=0,OM=0,STR='nl',TRN=0,bb=20,sb=10,hand=0,turnI=-1,ANIM=0,lastB=0,lvl=-1,ST={h:0,w:0,l:0,tp:0,tw:0};
+try{Object.assign(ST,JSON.parse(localStorage.getItem('rp')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('rp',JSON.stringify(ST))}catch(e){}};
+const S=async ms=>{const k=GID;await new Promise(r=>setTimeout(r,ms));if(k!=GID)throw 0};
+const pot=()=>P.reduce((s,p)=>s+p.inv,0),live=()=>P.filter(p=>!p.fold&&!p.out),canAct=p=>!p.fold&&!p.out&&!p.allin;
+const nm=p=>`<b style="color:${COL[p.i]}">${p.n}</b>`,cs=c=>`<span class="${[1,2].includes(c/13|0)?'rd':''}">${RK(c%13+2)}${SU[c/13|0]}</span>`;
+const cardHTML=(c,k='',d=0)=>{const a=d?` style="animation-delay:${d}ms"`:'';return c==null?`<div class="card back ${k}"${a}></div>`:`<div class="card ${k} ${[1,2].includes(c/13|0)?'red':''}"${a}><b>${RK(c%13+2)}</b><i>${SU[c/13|0]}</i></div>`};
+function L(h,c=''){const d=document.createElement('div');d.className=c;d.innerHTML=h;g('lg').append(d);g('lg').scrollTop=1e9}
+function modal(h){const m=g('md');m.hidden=false;m.innerHTML=`<div class="box">${h}<button class="x" onclick="P.length?g('md').hidden=true:menu()">✕</button></div>`}
+function gameOver(){const t=ST.w+ST.l;g('md').hidden=false;g('md').innerHTML=`<div class="lobby over"><div class="neon">GAME OVER</div><div class="suits">♠ <i>♥</i> ♣ <i>♦</i></div><p class="sub">${TRN?'HAS SIDO ELIMINADO DEL TORNEO':'TE HAS QUEDADO SIN FICHAS'} 💸</p><div class="panel"><p>Manos jugadas en esta partida: <b>${hand}</b></p><p>Win rate histórico: <b>${t?Math.round(ST.w/t*100):0}%</b></p><button class="gd cta" onclick="newGame(LAST)">🔁 Volver a intentarlo</button><button onclick="menu()">🏠 Menú principal</button></div></div>`}
+function menu(){const o=(v,t,x='')=>`<option value="${v}" ${x}>${t}</option>`;g('md').hidden=false;
+g('md').innerHTML=`<div class="lobby"><div class="fan">${[12,25,38,51].map((c,k)=>`<span style="transform:rotate(${(k-1.5)*16}deg)">${cardHTML(c,'big')}</span>`).join('')}</div><div class="neon">ROYAL CASINO</div><div class="suits">♠ <i>♥</i> ♣ <i>♦</i></div><p class="sub">SALA VIP DE PÓKER · MESA DE 6 JUGADORES</p>
+<div class="panel"><label>Tu nombre<input id="mn" maxlength="12" value="${ST.name||''}" placeholder="Jugador"></label>
+<label>Modalidad<select id="mv">${o('hold','Texas Hold’em')}${o('omaha','Omaha (4 cartas)')}${o('bigo','Omaha 5 cartas (Big O)')}${o('court','Courchevel')}${o('short','Short Deck (6+)')}${o('draw','Five Card Draw')}</select></label>
+<label>Apuestas<select id="ms">${o('nl','No Limit')}${o('pl','Pot Limit')}${o('fl','Límite fijo')}</select></label>
+<label>Modo<select id="mt">${o(0,'Partida libre (1000€)')}${o(1,'Torneo (1500€, ciegas crecientes)')}</select></label>
+<label>Dificultad de la IA<select id="mf">${o(0,'Fácil')}${o(1,'Normal','selected')}${o(2,'Difícil')}</select></label>
+<button class="gd cta" onclick="newGame({mode:g('mv').value,str:g('ms').value,trn:+g('mt').value,df:+g('mf').value,name:g('mn').value})">🎰 Entrar a la mesa</button><button onclick="stats()">📊 Perfil</button></div>${P.length?`<button class="x" onclick="g('md').hidden=true">✕</button>`:''}</div>`}
+function stats(){const t=ST.w+ST.l;modal(`<h2>🧑 ${ST.name||'Tu perfil'}</h2><div class="bigp">${t?Math.round(ST.w/t*100):0}%</div><p>Win rate (manos)</p><div class="g"><div><b>${ST.h}</b>Manos</div><div><b>${ST.w}</b>Ganadas</div><div><b>${ST.l}</b>Perdidas</div><div><b>${ST.tp}</b>Torneos</div><div><b>${ST.tw}</b>Torneos ganados</div></div><button onclick="ST={h:0,w:0,l:0,tp:0,tw:0,name:ST.name};save();stats()">Reiniciar</button>`)}
+function ev5(c){const r=c.map(x=>x%13+2).sort((a,b)=>b-a),f=c.every(x=>(x/13|0)==(c[0]/13|0)),n={};r.forEach(x=>n[x]=(n[x]||0)+1);
+const q=Object.keys(n).map(Number).sort((a,b)=>n[b]-n[a]||b-a);let s=0,k=q.slice();
+if(q.length==5){if(r[0]-r[4]==4){s=1;k=[r[0]]}else if(r[0]==14&&r[1]==(MO.sd?9:5)){s=1;k=[MO.sd?9:5]}}
+const m=n[q[0]],m2=n[q[1]],cat=s&&f?8:m==4?7:m==3&&m2==2?6:f?5:s?4:m==3?3:m==2&&m2==2?2:m==2?1:0;
+return (MO.sd?[0,1,2,4,3,6,5,7,8][cat]:cat)*759375+k.reduce((a,x)=>a*15+x,0)}
+function cmb(a,k){if(!k)return[[]];if(a.length<k)return[];const[h,...t]=a;return[...cmb(t,k-1).map(x=>[h,...x]),...cmb(t,k)]}
+function best(h,b,om){let s=0;const C=om?cmb(h,2).flatMap(x=>cmb(b,3).map(y=>x.concat(y))):cmb(h.concat(b),5);for(const c of C)s=Math.max(s,ev5(c));return s}
+function pre(h){const r=h.map(x=>x%13+2).sort((a,b)=>b-a),su=h.map(x=>x/13|0);let s=r.reduce((a,x)=>a+x,0)/r.length/14*.55;
+for(let i=0;i<r.length;i++)for(let j=i+1;j<r.length;j++){if(r[i]==r[j])s+=r[i]/14*.2/(r.length/2);if(su[i]==su[j])s+=.03;if(Math.abs(r[i]-r[j])<3)s+=.015}return Math.min(s,.95)}
+function lim(p){const mx=p.bet+p.chips,tc=cur-p.bet;let lo=cur+minR,hi=mx;if(STR=='pl')hi=cur+pot()+tc;if(STR=='fl')lo=hi=cur+(street<2?bb:2*bb);lo=Math.min(lo,mx);hi=Math.min(Math.max(hi,lo),mx);return[lo,hi]}
+function aiAct(p){const tc=cur-p.bet,po=pot(),pr=p.ai,[lo,hi]=lim(p),can=p.bet+p.chips>cur;
+let s=board.length>2||MO.dr?[.1,.38,.6,.72,.8,.86,.93,.97,1][best(p.hole,board,OM)/759375|0]:Math.min(1,Math.max(0,(pre(p.hole)-.25)*1.7));
+if(MO.dr&&street<1)s=Math.max(s,.3);s+=(Math.random()-.5)*D.nz+.14;const bl=Math.random()<D.bl*pr.a,need=tc?tc/(po+tc):0,rn=Math.random();
+const sz=()=>{let to=Math.round((cur+Math.max(minR,po*(.5+Math.random()*.8)))/5)*5;if(s>.95&&Math.random()<.3)to=hi;return Math.max(lo,Math.min(hi,to))};
+if(!tc)return can&&(s>.5-pr.a*.15||bl)&&rn<.45+pr.a*.45?{t:'raise',to:sz()}:{t:'call'};
+if(!bl&&need>.12&&s<need*D.ft*(.9+pr.t*.6)-.04)return{t:'fold'};
+if(can&&s>.58-pr.a*.12&&rn<.4+pr.a*.45)return{t:'raise',to:sz()};return{t:'call'}}
+function humanAct(p){return new Promise(res=>{const tc=Math.min(cur-p.bet,p.chips),[lo,hi]=lim(p),mx=p.bet+p.chips,can=mx>cur,sl=g('sl');
+g('act').hidden=false;g('bF').style.display=tc?'':'none';g('bC').textContent=tc?`Voy con ${tc}€`:'Mesa';g('bR').style.display=can?'':'none';g('rs').style.display=can?'flex':'none';
+const am=g('amt'),cl=v=>Math.max(lo,Math.min(hi,Math.round(+v)||lo));
+sl.min=am.min=lo;sl.max=am.max=hi;sl.value=am.value=lo;sl.disabled=am.disabled=lo==hi;
+const upd=()=>g('bR').textContent=(cl(am.value)>=mx?'All-in ':cur?'Subir a ':'Apostar ')+cl(am.value)+'€';upd();
+sl.oninput=()=>{am.value=sl.value;upd()};am.oninput=()=>{sl.value=cl(am.value);upd()};am.onchange=()=>{am.value=cl(am.value);sl.value=am.value;upd()};
+am.onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();g('bR').click()}};
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const f=+b.dataset.q;am.value=sl.value=f<0?hi:f==0?lo:cl(cur+f*(pot()+tc));upd()});
+const done=a=>{g('act').hidden=true;res(a)};g('bF').onclick=()=>done({t:'fold'});g('bC').onclick=()=>done({t:'call'});g('bR').onclick=()=>done({t:'raise',to:cl(am.value)})})}
+const put=(p,a)=>{p.chips-=a;p.bet+=a;p.inv+=a;if(!p.chips)p.allin=1};
+async function turn(p){turnI=p.i;render();let a;
+if(p.i==0)a=await humanAct(p);else{p.bub='💭 …';p.bt='';p.pop=1;render();await S(700+Math.random()*800);a=aiAct(p)}
+turnI=-1;p.pop=1;const tc=Math.min(cur-p.bet,p.chips);let r=0;
+if(a.t=='fold'){p.fold=1;p.bub='Paso';p.bt='f';L(`${nm(p)} se retira`,'f')}
+else if(a.t=='call'){put(p,tc);p.bt='c';p.bub=!tc?'Mesa':`${p.allin?'¡All-in! ':''}Voy con ${tc}€`;L(`${nm(p)} ${tc?(p.allin?'va all-in con '+tc+'€':'iguala '+tc+'€'):'hace mesa'}`,'c')}
+else{const to=Math.min(a.to,p.bet+p.chips),o=cur;put(p,to-p.bet);minR=Math.max(minR,to-cur);cur=Math.max(cur,to);r=1;p.bt='r';p.bub=`${p.allin?'¡All-in! ':''}Voy con ${to}€ ⬆`;L(`${nm(p)} ${o?'sube a':'apuesta'} ${to}€${p.allin?' (all-in)':''}`,'r')}
+render();return r}
+async function round(f){let pend=P.filter(canAct).map(p=>p.i),i=f;
+while(live().length>1&&pend.length){if(pend.length==1&&P[pend[0]].bet>=cur&&P.filter(canAct).length<2)break;
+if(!pend.includes(i)){i=(i+1)%6;continue}
+const p=P[i];pend=pend.filter(x=>x!=i);if(await turn(p))pend=P.filter(q=>canAct(q)&&q.i!=i).map(q=>q.i);i=(i+1)%6}
+P.forEach(p=>p.bet=0);cur=0}
+function post(p,a,t){a=Math.min(a,p.chips);put(p,a);L(`${nm(p)} pone ${t} ${a}€`,'sys')}
+async function playHand(){
+hand++;if(TRN){const l=Math.min((hand-1)/5|0,7);if(l!=lvl){lvl=l;[sb,bb]=LV[l];if(l)L(`⬆ Suben las ciegas a ${sb}/${bb}`,'sys')}}else[sb,bb]=[10,20];
+deck=[...Array(52).keys()].filter(c=>!MO.sd||c%13>3);for(let i=deck.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[deck[i],deck[j]]=[deck[j],deck[i]]}
+board=[];lastB=0;street=0;const st0={};
+P.forEach(p=>{p.hole=[];p.bet=p.inv=0;p.fold=p.out;p.allin=0;p.bub='';p.show=0;p.win=0;st0[p.i]=p.chips});
+const al=()=>P.filter(p=>!p.out),nx=i=>{do i=(i+1)%6;while(P[i].out);return i};
+dealer=nx(dealer<0?5:dealer);const sbS=al().length==2?dealer:nx(dealer),bbS=nx(sbS);
+for(let k=0;k<MO.h;k++)al().forEach(p=>p.hole.push(deck.pop()));if(MO.pf)board.push(deck.pop());
+ANIM=1;L(`Mano #${hand} · ciegas ${sb}/${bb}€ · dealer ${P[dealer].n}`,'hd');
+post(P[sbS],sb,'ciega pequeña');post(P[bbS],bb,'ciega grande');cur=bb;minR=bb;render();await S(MO.h>2?2000:1300);
+await round(nx(bbS));
+if(MO.dr)await drawFlow(nx);else for(street=1;street<4&&live().length>1;street++){
+L(['','Flop','Turn','River'][street]+' · ronda de apuestas','hd');P.forEach(p=>{if(!p.fold)p.bub=''});cur=0;minR=bb;render();await S(700);
+for(let j=0;j<(street==1?3-(MO.pf||0):1);j++){board.push(deck.pop());render();await S(450)}
+L('Mesa: '+board.map(cs).join(' '));await S(300);await round(nx(dealer))}
+street=3;const lv=live(),sc={};
+if(lv.length>1)lv.forEach(p=>{p.show=1;sc[p.i]=best(p.hole,board,OM);L(`${nm(p)} muestra ${hn(sc[p.i])}`)});
+const lvls=[...new Set(P.map(p=>p.inv).filter(x=>x))].sort((a,b)=>a-b),gain={};let prev=0;
+for(const V of lvls){const amt=P.reduce((s,p)=>s+Math.max(0,Math.min(p.inv,V)-prev),0);prev=V;let el=lv.filter(p=>p.inv>=V);if(!el.length)el=[lv.reduce((a,b)=>b.inv>a.inv?b:a)];
+const m=Math.max(...el.map(p=>sc[p.i]||0)),w=el.filter(p=>(sc[p.i]||0)==m),sh=amt/w.length|0;w.forEach((p,k)=>gain[p.i]=(gain[p.i]||0)+sh+(k?0:amt-sh*w.length))}
+for(const i in gain){const p=P[i];p.chips+=gain[i];p.win=1;p.bub=`🏆 +${gain[i]}€`;p.bt='r';p.pop=1;L(`${nm(p)} gana ${gain[i]}€`+(lv.length>1?` con ${hn(sc[p.i])}`:' (todos se retiran)'),'win')}
+P.forEach(p=>{if(p.inv&&!gain[p.i]){p.bub=`−${p.inv}€`;p.bt='f';p.pop=1;L(`${nm(p)} pierde ${p.inv}€`,'f')}});P.forEach(p=>p.inv=0);
+if(!P[0].out&&st0[0]!=null&&(st0[0]>0)){const n=P[0].chips-st0[0];ST.h++;if(n>0)ST.w++;else if(n<0)ST.l++}
+render();await S(3200);
+P.forEach(p=>{if(!p.out&&!p.chips){if(TRN||p.i==0){p.out=1;L(`💀 ${p.n} eliminado`,'sys')}else{p.chips=1000;L(`${p.n} recompra 1000€`,'sys')}}});
+if(P[0].out){if(TRN)ST.tp++;save();gameOver();return false}
+if(al().length==1){ST.tp++;ST.tw++;save();modal('<h2>🏆 ¡Campeón!</h2><p>Has ganado el torneo.</p><button class="gd" onclick="menu()">Nueva partida</button>');return false}
+save();return true}
+async function loop(){const id=GID;try{while(id==GID&&await playHand());}catch(e){if(e)console.error(e)}}
+function newGame(o){GID++;LAST=o;ST.name=(o.name||'').replace(/[<>&"']/g,'').trim().slice(0,12);save();MO=MD[o.mode];OM=MO.o;D=DFC[o.df];DFN=o.df;DRW=0;g('dr').hidden=true;STR=o.str;TRN=o.trn;hand=0;dealer=-1;lvl=-1;turnI=-1;g('act').hidden=true;g('md').hidden=true;g('lg').innerHTML='';
+P=NAMES.map((n,i)=>({i,n:i?n[0]:(ST.name||'Tú'),e:n[1],chips:TRN?1500:1000,hole:[],bet:0,inv:0,fold:0,out:0,allin:0,bub:'',ai:PR[i]}));board=[];
+L(`🎲 ${MO.n} · ${{nl:'No Limit',pl:'Pot Limit',fl:'Límite fijo'}[STR]} · ${TRN?'Torneo':'Partida libre'}`,'hd');legend();loop()}
+const hn=v=>(MO.sd?HS:HN)[v/759375|0];
+function legend(){const H=MO.sd?HS:HN,d=g('lgd');d.innerHTML=`<summary>ℹ Fichas y manos</summary><div class="lgb"><div>${[...DN].reverse().map(([v,c])=>`<span class="cd"><b style="background:${c}"></b>${v}€</span>`).join('')}</div><ol>${[...H].reverse().map(x=>`<li>${x}</li>`).join('')}</ol></div>`;d.open=innerWidth>=900}
+function aiDiscard(p){const h=p.hole,n={},u={};h.forEach(c=>{n[c%13]=(n[c%13]||0)+1;u[c/13|0]=(u[c/13|0]||0)+1});if(best(h,[],0)/759375>=4)return[];
+const fs=Object.keys(u).find(k=>u[k]==4);let d=h.map((c,j)=>j).filter(j=>fs!=null?(h[j]/13|0)!=fs:n[h[j]%13]==1);
+if(fs==null&&d.length==5)d=d.sort((a,b)=>h[a]%13-h[b]%13).slice(0,3);return d}
+function humanDraw(p){return new Promise(res=>{DRW=1;SEL=new Set;const b=g('bD'),u=()=>b.textContent=SEL.size?`Cambiar ${SEL.size}`:'Quedarme';g('dr').hidden=false;u();
+window.togg=j=>{SEL.has(j)?SEL.delete(j):SEL.add(j);u();render()};b.onclick=()=>{g('dr').hidden=true;DRW=0;const d=[...SEL];SEL=new Set;render();res(d)};render()})}
+async function drawFlow(nx){if(live().length<2)return;L('Fase de descarte','hd');
+for(const p of live()){let d;if(p.i==0)d=await humanDraw(p);else{await S(600);d=aiDiscard(p)}
+d.forEach(j=>p.hole[j]=deck.pop());p.bub=d.length?`Cambio ${d.length}`:'Me quedo';p.bt='c';p.pop=1;L(`${nm(p)} ${d.length?'cambia '+d.length+' cartas':'se queda'}`,'c');render();await S(350)}
+street=1;P.forEach(p=>{if(!p.fold)p.bub=''});cur=0;minR=bb;L('Ronda de apuestas final','hd');render();await S(600);await round(nx(dealer))}
+const DN=[[1000,'#e0b020'],[500,'#7b3fa0'],[100,'#1a1a1a'],[25,'#1e8a4c'],[5,'#c0262d'],[1,'#e6e6e6']];
+function chips(a,m=5){let h='',n=0;for(const[d,c]of DN){const k=a/d|0;a-=k*d;if(k&&n<m){n++;h+=`<span class="stk" style="--c:${c}">${'<i></i>'.repeat(Math.min(k,6))}</span>`}}return h}
+function render(){g('pt').innerHTML=`<span style="display:inline-flex;align-items:flex-end">${chips(pot(),5)}</span><span>Bote: ${pot()}€</span>`;
+g('bdr').innerHTML=MO.dr?'':[0,1,2,3,4].map(i=>board[i]!=null?cardHTML(board[i],'big'+(i>=lastB?' deal':'')):'<div class="card big empty"></div>').join('');lastB=board.length;
+g('seats').innerHTML=P.map((p,i)=>{const d=ANIM?' deal':'';
+const cc=(c,j,sh)=>sh?cardHTML(c,(p.i?'sm':'big')+d,ANIM?(j*6+i)*80:0):cardHTML(null,'sm'+d,ANIM?(j*6+i)*80:0),hc=p.out?'':p.hole.map((c,j)=>{const x=cc(c,j,p.i==0||p.show);return DRW&&p.i==0?`<span class="pk ${SEL.has(j)?'on':''}" onclick="togg(${j})">${x}</span>`:x}).join('');
+return `<div class="seat ${p.fold?'fold':''} ${turnI==i?'turn':''} ${p.win?'win':''}" style="left:${POS[i][0]}%;top:${POS[i][1]}%">${p.bub&&!p.out?`<div class="bub b${p.bt||''} ${p.pop?'pop':''}">${p.bub}</div>`:''}<div>${hc}</div>
+<div class="pl"><span class="av">${p.out?'💀':p.e}</span><div><b style="color:${COL[i]}">${p.n}</b><small>${p.out?'Eliminado':p.chips+'€'}</small></div><span class="ms">${p.out?'':chips(p.chips,3)}</span>${dealer==i&&!p.out?'<em class="dl">D</em>':''}</div>${p.bet?`<div class="bt">${chips(p.bet,3)}<span>${p.bet}€</span></div>`:''}</div>`}).join('');
+g('hd').textContent=`${MO.n} · ${{nl:'No Limit',pl:'Pot Limit',fl:'Límite fijo'}[STR]} · ${TRN?'Torneo':'Libre'} · Ciegas ${sb}/${bb}€ · IA ${['Fácil','Normal','Difícil'][DFN]} · Mano ${hand}`;
+g('stt').textContent=['Pre-flop','Flop','Turn','River'][street]+' · '+(turnI>0?'Turno de '+P[turnI].n:turnI==0?'¡Tu turno!':'Repartiendo / recuento');
+ANIM=0;P.forEach(p=>p.pop=0)}
+legend();menu();
+</script></body></html>
